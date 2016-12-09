@@ -1,16 +1,18 @@
-//import processing.serial.*;
-//Serial myPort;
+import processing.serial.*;
+Serial myPort;
 String descripcion = "",actual = "";
 int var=0;
 import controlP5.*;
 ControlP5 miControl;
+int[] variable_a = { 10, 20, 30,40,50,60,70,80 };
+int[] variable_b = { 50, 60, 30,40,50,80,40,60 };// esta va a ser la variable a graficar, como el nivel de humedad por ejemplo
 int c;
 float humedad,temperatura,luz;
 float humedad_actual=0,temperatura_actual=0,luz_actual=0;
 
 void setup() {
- size(580,260); 
- //myPort = new Serial(this,"COM4",9600);
+ size(580,300); 
+ //myPort = new Serial(this,"COM4",9600);// ojoo aqui poner el puerto serial del pc correspondiente
  
  miControl = new ControlP5(this);
  miControl.addKnob("Humedad",0,100,0,50,30,150).hide().setLabel("Nivel de humedad %");
@@ -61,7 +63,38 @@ void draw() {
  }
  if(var == 3)
  {
-   background(c);
+   background(170);
+   line(160,250,550,250);
+   line(160,250,160,20);
+   for(int i=0;i<7;i++)
+   {
+    textSize(10);
+    fill(143,136,0);
+    text(30+i*10,145,245-i*35); 
+   }
+   for(int i=0;i<8;i++)
+   {
+     if(i%2==0){
+    textSize(10);
+    fill(143,136,0);
+    text(str(7-i)+" dias atras",148+50*i,260); 
+     }
+     else{
+       textSize(10);
+    fill(143,136,0);
+    text(str(7-i)+" dias atras",148+50*i,280); 
+     }
+   }
+   for(int i=0;i<7;i++)
+   {
+     line(174+i*50,234-(variable_b[i]-30)*3.5,224+i*50,234-(variable_b[i+1]-30)*3.5);
+    
+   }
+   for(int i=0;i<8;i++)
+   {
+     fill(143,136,0);
+    ellipse(174+i*50,234-(variable_b[i]-30)*3.5,10,10); 
+   }
  }
  
 
@@ -87,6 +120,11 @@ void DefinirPersonalizado()
  humedad_actual = humedad;
  temperatura_actual = temperatura;
  luz_actual = luz;
+ int h = int(humedad_actual);
+ int t = int(temperatura_actual);
+ int l = int(luz_actual);
+ String d = str(h)+"-"+str(t)+"-"+str(l)+"-";
+ //myPort.write(d);
 }
 void Humedad(float valor)
 {
@@ -188,6 +226,15 @@ void Plan1()
   miControl.getController("Plan3").setColorBackground(color( 107,127,6 ));
      miControl.getController("Descripcion2").setColorBackground(color( 107,127,6 ));
    miControl.getController("Descripcion3").setColorBackground(color( 107,127,6 ));
+   humedad_actual = 50;
+ temperatura_actual = 20;
+ luz_actual = 80;
+ int h = int(humedad_actual);
+ int t = int(temperatura_actual);
+ int l = int(luz_actual);
+ String d = str(h)+"-"+str(t)+"-"+str(l)+"-";
+ //myPort.write(d);
+   
 }
 void Plan2()
 {
@@ -197,6 +244,14 @@ void Plan2()
    miControl.getController("Descripcion3").setColorBackground(color( 107,127,6 ));
   miControl.getController("Plan1").setColorBackground(color( 107,127,6 ));
   miControl.getController("Plan3").setColorBackground(color( 107,127,6 ));
+  humedad_actual = 40;
+ temperatura_actual = 15;
+ luz_actual = 70;
+ int h = int(humedad_actual);
+ int t = int(temperatura_actual);
+ int l = int(luz_actual);
+ String d = str(h)+"-"+str(t)+"-"+str(l)+"-";
+ //myPort.write(d);
 }
 void Plan3()
 {
@@ -206,4 +261,12 @@ void Plan3()
   miControl.getController("Plan1").setColorBackground(color( 107,127,6 ));
      miControl.getController("Descripcion1").setColorBackground(color( 107,127,6 ));
    miControl.getController("Descripcion2").setColorBackground(color( 107,127,6 ));
+   humedad_actual = 30;
+ temperatura_actual = 10;
+ luz_actual = 50;
+ int h = int(humedad_actual);
+ int t = int(temperatura_actual);
+ int l = int(luz_actual);
+ String d = str(h)+"-"+str(t)+"-"+str(l)+"-";
+ //myPort.write(d);
 }
