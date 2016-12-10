@@ -1,5 +1,7 @@
 import processing.serial.*;
 Serial myPort;
+int agua=35;
+int datos[] = new int[4];// humedad, temperatura, luz, agua %
 String descripcion = "",actual = "";
 int var=0;
 import controlP5.*;
@@ -13,8 +15,9 @@ float humedad_actual=0,temperatura_actual=0,luz_actual=0;
 void setup() {
  size(580,300); 
  //myPort = new Serial(this,"COM4",9600);// ojoo aqui poner el puerto serial del pc correspondiente
- 
+ //myPort.bufferUntil('\n');
  miControl = new ControlP5(this);
+ miControl.addSlider("Agua").setPosition(50,50).setSize(50,200).hide();
  miControl.addKnob("Humedad",0,100,0,50,30,150).hide().setLabel("Nivel de humedad %");
  miControl.addKnob("Temperatura",0,20,0,220,30,150).hide().setLabel("Temperatura °C");
  miControl.addKnob("Luz",0,100,0,390,30,150).hide().setLabel("Intensidad de luz 0-100");
@@ -64,6 +67,7 @@ void draw() {
  if(var == 3)
  {
    background(170);
+   miControl.getController("Agua").setValue(float(agua));
    line(160,250,550,250);
    line(160,250,160,20);
    for(int i=0;i<7;i++)
@@ -115,6 +119,12 @@ void Planes()
     miControl.getController("Descripcion2").show();
     miControl.getController("Descripcion3").show();
 }
+void Agua()
+{
+ 
+  
+  
+}
 void DefinirPersonalizado()
 {
  humedad_actual = humedad;
@@ -142,21 +152,21 @@ void Descripcion1()
 {
   
    miControl.getController("Descripcion").show();
-   descripcion = "Este plan hace esta y esta otra wea .....";
+   descripcion = "Baja luz, baja agua";
   
 }
 void Descripcion2()
 {
   
    miControl.getController("Descripcion").show();
-   descripcion = "Este plan hace esta y esta otra wea .....";
+   descripcion = "Media luz, mediana agua";
   
 }
 void Descripcion3()
 {
   
    miControl.getController("Descripcion").show();
-   descripcion = "Este plan hace esta y esta otra wea .....";
+   descripcion = "Alta luz, mucha agua";
   
 }
 void Descripcion()
@@ -194,11 +204,13 @@ void Estadisticas()
   miControl.getController("Estadisticas").hide();
   miControl.getController("Personalizado").hide();
     miControl.getController("Volver3").show();
+    miControl.getController("Agua").show();
 }
 void Volver3()
 {
  var = 0;
  miControl.getController("Volver3").hide();
+ miControl.getController("Agua").hide();
  miControl.getController("Personalizado").show();
  miControl.getController("Estadisticas").show();
  miControl.getController("Planes").show();
@@ -233,7 +245,7 @@ void Plan1()
  int t = int(temperatura_actual);
  int l = int(luz_actual);
  String d = str(h)+"-"+str(t)+"-"+str(l)+"-";
- //myPort.write(d);
+ //myPort.write(1);
    
 }
 void Plan2()
@@ -251,7 +263,7 @@ void Plan2()
  int t = int(temperatura_actual);
  int l = int(luz_actual);
  String d = str(h)+"-"+str(t)+"-"+str(l)+"-";
- //myPort.write(d);
+ //myPort.write(2);
 }
 void Plan3()
 {
@@ -268,5 +280,14 @@ void Plan3()
  int t = int(temperatura_actual);
  int l = int(luz_actual);
  String d = str(h)+"-"+str(t)+"-"+str(l)+"-";
- //myPort.write(d);
+ //myPort.write(3);
+}
+void serialEvent (Serial mySerial)
+{
+  
+ String texto = mySerial.readStringUntil('\n');
+ texto = trim(texto);
+ datos = int(split(texto, ' '));
+ agua = datos[3];
+  
 }
